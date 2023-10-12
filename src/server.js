@@ -1,9 +1,9 @@
+import express from 'express'
 import { createServer } from "http";
 import { Server } from "socket.io";
-import dotenv from 'dotenv';
-dotenv.config()
+const app = express()
 
-const httpServer = createServer();
+const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
         origin: "*",
@@ -20,6 +20,19 @@ io.on("connection", (socket) => {
         })
     })
 });
+
+app.get("/", (req, res) => {
+    res.send("Giphy Chat Server is running successfully");
+});
+  
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+    next();
+})
+
 
 httpServer.listen(8080, () => {
     console.log('Server is running')
