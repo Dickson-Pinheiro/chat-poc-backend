@@ -6,7 +6,8 @@ dotenv.config()
 const httpServer = createServer();
 const io = new Server(httpServer, {
     cors: {
-        origin: "https://chat-bandeira.vercel.app"
+        origin: "https://chat-bandeira.vercel.app",
+        methods: ["GET", "POST"]
     }
 });
 
