@@ -4,7 +4,11 @@ import dotenv from 'dotenv';
 dotenv.config()
 
 const httpServer = createServer();
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+    cors: {
+        origin: 'https://api.dicksonpinheiro.com.br'
+    }
+});
 
 io.on("connection", (socket) => {
     socket.on('set_message', text => {
