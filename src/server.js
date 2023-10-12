@@ -10,7 +10,8 @@ io.on("connection", (socket) => {
     socket.on('set_message', text => {
         io.emit('receive_message', {
             text,
-            authorId: socket.id
+            authorId: socket.id,
+            id: crypto.randomUUID()
         })
     })
 });
