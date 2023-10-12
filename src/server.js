@@ -6,7 +6,7 @@ dotenv.config()
 const httpServer = createServer();
 const io = new Server(httpServer, {
     cors: {
-        origin: 'https://api.dicksonpinheiro.com.br'
+        origin: "https://api.dicksonpinheiro.com.br"
     }
 });
 
