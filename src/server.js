@@ -1,10 +1,20 @@
 import express from 'express'
 import { createServer } from "http";
+import dotenv from 'dotenv';
+import { routes } from './routes/routes.js';
 import { Server } from "socket.io";
-import crypto from 'crypto'
-const app = express()
+import cors from 'cors'
+import { eventAuthMiddleware } from './middlewares/eventAuthMiddleware.js';
+import { connecionEvent } from './events/connectionEvent.js';
+dotenv.config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(routes);
 
 const httpServer = createServer(app);
+
 const io = new Server(httpServer, {
     cors: {
         origin: "*",
@@ -12,20 +22,10 @@ const io = new Server(httpServer, {
     }
 });
 
-io.on("connection", (socket) => {
-    socket.on('set_message', text => {
-        io.emit('receive_message', {
-            text,
-            authorId: socket.id,
-            id: crypto.randomUUID()
-        })
-    })
-});
-
-app.get("/", (req, res) => {
-    res.send("Giphy Chat Server is running successfully");
-});
+io.use(eventAuthMiddleware)
+io.on("connection", connecionEvent);
 
 httpServer.listen(8080, () => {
     console.log('Server is running')
+    console.log(process.env.VERIFY);
 });
